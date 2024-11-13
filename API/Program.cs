@@ -6,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Register the context as service
+// configures the StoreContext to use SQL Server as its database provider in an ASP.NET Core application. 
+// It registers the StoreContext with the dependency injection container and retrieves the connection string named "DefaultConnection" from the application's configuration settings.
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
