@@ -20,4 +20,19 @@ var app = builder.Build();
 
 app.MapControllers();
 
+try
+{
+    using var scope = app.Services.CreateScope();   // disposed once it's outside of scope
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<StoreContext>();
+    // apply pending migration to database, will create the database if it does not already exist.
+    await context.Database.MigrateAsync(); 
+    await StoreContextSeed.SeedAsync(context);
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+    throw;
+}
+
 app.Run();
