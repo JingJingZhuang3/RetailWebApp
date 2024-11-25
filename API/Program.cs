@@ -15,6 +15,8 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 });
 //Register IRepository: Scoped at the level of HTTP request lifetime
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+//IGenericRepository
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
 
@@ -26,7 +28,7 @@ try
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<StoreContext>();
     // apply pending migration to database, will create the database if it does not already exist.
-    await context.Database.MigrateAsync(); 
+    await context.Database.MigrateAsync();
     await StoreContextSeed.SeedAsync(context);
 }
 catch (Exception ex)
