@@ -1,6 +1,7 @@
 using System;
 using Core.Entities;
 using Core.Interfaces;
+using Microsoft.VisualBasic;
 
 namespace Core.Specifications;
 // Product Specification for Filtering, Sorting, etc... 
@@ -11,6 +12,7 @@ public class ProductSpecification : BaseSpecification<Product>
         (specParams.Types.Count == 0 || specParams.Types.Contains(x.Type))
     )
     {
+        ApplyPaging(specParams.PageSize * (specParams.PageIndex-1), specParams.PageSize);
         switch (specParams.Sort)
         {
             case "priceAsc":
