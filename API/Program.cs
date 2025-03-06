@@ -1,3 +1,4 @@
+using API.Middleware;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +18,16 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 //IGenericRepository
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+//CORs
+builder.Services.AddCors();
 
 var app = builder.Build();
+
+// configure the HTTP request pipeline
+app.UseMiddleware<ExceptionMiddleware>();
+
+// allow the list orgins to send requests to API server
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
 app.MapControllers();
 
